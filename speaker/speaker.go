@@ -2,6 +2,7 @@
 package speaker
 
 import (
+	"cmp"
 	"io"
 	"sync"
 	"time"
@@ -10,8 +11,12 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/gopxl/beep/v2"
-	"github.com/gopxl/beep/v2/internal/util"
+	// "github.com/zhenmu/beep/v2/internal/util"
 )
+
+func Clamp[T cmp.Ordered](x, minV, maxV T) T {
+	return max(min(x, maxV), minV)
+}
 
 const channelCount = 2
 const bitDepthInBytes = 2
@@ -191,7 +196,7 @@ func (s *sampleReader) Read(buf []byte) (n int, err error) {
 	for i := range s.buf[:ns] {
 		for c := range s.buf[i] {
 			val := s.buf[i][c]
-			val = util.Clamp(val, -1, 1)
+			val = Clamp(val, -1, 1)
 			valInt16 := int16(val * (1<<15 - 1))
 			low := byte(valInt16)
 			high := byte(valInt16 >> 8)
