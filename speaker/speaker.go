@@ -69,6 +69,10 @@ func Init(sampleRate beep.SampleRate, bufferSize int) error {
 	return nil
 }
 
+func GetOtoContext() *oto.Context {
+	return context
+}
+
 // Close closes audio playback. However, the underlying driver context keeps existing, because
 // closing it isn't supported (https://github.com/hajimehoshi/oto/issues/149). In most cases,
 // there is certainly no need to call Close even when the program doesn't play anymore, because
